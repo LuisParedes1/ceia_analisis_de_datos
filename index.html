@@ -125,6 +125,9 @@
   @media (min-width: 820px) { .clase { grid-template-columns: 140px 1fr 1fr; gap: 24px; } }
   .clase .meta { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
   .clase .meta .big { display: block; font-family: var(--serif); font-size: 36px; line-height: 1; color: var(--accent); margin-bottom: 6px; }
+  .clase .meta a.notion { display: inline-block; margin-top: 10px; font-family: var(--mono); font-size: 11px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 4px; text-decoration: none; color: var(--ink-2); }
+  .clase .meta a.notion:hover { border-color: var(--accent); color: var(--accent); }
+  .clase .meta a.notion::after { content: " ↗"; }
   .clase p.sum { margin: 0 0 10px; font-size: 14.5px; color: var(--ink-2); }
   .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
   .tags li { font-size: 12px; padding: 3px 8px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); }
@@ -240,6 +243,10 @@
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
           Repositorio
         </a>
+        <a class="btn" href="https://app.notion.com/p/33925f24dbe28002898bd4ca81eae9d3">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="1.5" width="12" height="13" rx="2"/><path d="M5 5h6M5 8h6M5 11h4"/></svg>
+          Notas en Notion
+        </a>
         <a class="btn" href="https://campusposgrado.fi.uba.ar/course/view.php?id=240">Campus FIUBA</a>
       </div>
     </div>
@@ -295,7 +302,7 @@
     <div class="sec-head">
       <span class="num">02</span>
       <h2>Clases</h2>
-      <p>Un resumen de cada encuentro con sus notebooks. <b>GitHub</b> abre la notebook renderizada y <b>Colab</b> la abre lista para ejecutar.</p>
+      <p>Un resumen de cada encuentro con sus notebooks. <b>Notas</b> abre mis apuntes de la clase en Notion, <b>GitHub</b> la notebook renderizada y <b>Colab</b> la abre lista para ejecutar.</p>
     </div>
     <div class="classes" id="class-list"></div>
   </div>
@@ -463,6 +470,7 @@
           <a class="btn primary" href="https://colab.research.google.com/github/LuisParedes1/CEIA_Analisis_de_datos/blob/main/TP/Trabajo_Practico_Analisis_de_Datos_CEIA.ipynb">Abrir notebook en Colab</a>
           <a class="btn" href="https://github.com/LuisParedes1/CEIA_Analisis_de_datos/blob/main/TP/Trabajo_Practico_Analisis_de_Datos_CEIA.ipynb">Ver en GitHub</a>
           <a class="btn" href="TP/Analisis_de_datos_-_Trabajo_grupal_-_2B2026.pdf">Enunciado (PDF)</a>
+          <a class="btn" href="https://app.notion.com/p/35525f24dbe28028a94fc41adfb1e27e">Notas del TP en Notion</a>
         </div>
       </div>
       <div>
@@ -491,6 +499,7 @@
       <div class="card">
         <h3>Actividades</h3>
         <ul class="nbs" id="activities"></ul>
+        <p style="margin:10px 0 0;font-size:13px">Notas en Notion: <a href="https://app.notion.com/p/35525f24dbe2802bb389f2ac1417782e">individuales</a> · <a href="https://app.notion.com/p/35925f24dbe28054a4c7f3898abf2042">grupales</a></p>
       </div>
 
       <div class="card">
@@ -501,6 +510,7 @@
           <li><a href="https://www.statlearning.com/">An Introduction to Statistical Learning (Python)</a><span class="sub">James, Witten, Hastie y Tibshirani</span></li>
           <li><a href="https://mml-book.github.io/book/mml-book.pdf">Mathematics for Machine Learning</a><span class="sub">Deisenroth, Faisal y Ong</span></li>
         </ul>
+        <p style="margin:10px 0 0;font-size:13px"><a href="https://app.notion.com/p/36a25f24dbe280b8825ce28e9992916b">Bibliografía en Notion →</a></p>
       </div>
 
       <div class="card">
@@ -511,7 +521,7 @@
           <li>Captura por puerto y flota 2010–2018, turismo, calidad de vida<span class="sub">Repasos prácticos con datos reales</span></li>
           <li>Student performance, movies (SQLite), Landsat<span class="sub">Lectura desde múltiples fuentes, imágenes</span></li>
         </ul>
-        <p style="margin:10px 0 0;font-size:13px"><a href="https://github.com/LuisParedes1/CEIA_Analisis_de_datos/tree/main/datasets">Ver carpeta datasets →</a></p>
+        <p style="margin:10px 0 0;font-size:13px"><a href="https://github.com/LuisParedes1/CEIA_Analisis_de_datos/tree/main/datasets">Ver carpeta datasets →</a> · <a href="https://app.notion.com/p/35225f24dbe2806fae06f1c52271d184">Notas en Notion →</a></p>
       </div>
 
       <div class="card">
@@ -562,33 +572,34 @@ LuisParedes1/CEIA_Analisis_de_datos</pre></div>
 const REPO = "LuisParedes1/CEIA_Analisis_de_datos";
 const BRANCH = "main";
 const gh = p => `https://github.com/${REPO}/blob/${BRANCH}/${encodeURI(p)}`;
-const colab = p => `https://colab.research.google.com/github/${REPO}/blob/${BRANCH}/${encodeURI(p)}`;
+const notion = id => `https://app.notion.com/p/${id}`;
+const colab = p =>`https://colab.research.google.com/github/${REPO}/blob/${BRANCH}/${encodeURI(p)}`;
 
 const CLASSES = [
-  { n: 1, date: "29 abr", title: "Introducción al Análisis de Datos",
+  { n: 1, notion: "33925f24dbe2805891f4c85db01202a7", date: "29 abr", title: "Introducción al Análisis de Datos",
     sum: "Qué es el análisis de datos, roles en equipos de datos, aprendizaje supervisado y no supervisado, y bibliotecas de Python para cada etapa del flujo.",
     tags: ["pandas", "lectura de fuentes", "tipos de variables", "intro EDA"],
     nbs: [["Introducción a pandas: importar datos de distintas fuentes", "notebooks/clase_01_introduccion.ipynb"],
           ["Ejercicio opcional", "recursos/clase_01_ejercicio.ipynb"]] },
-  { n: 2, date: "6 may", title: "Análisis exploratorio de datos (EDA)",
+  { n: 2, notion: "33925f24dbe280bfb0cdd25f3b0f0354", date: "6 may", title: "Análisis exploratorio de datos (EDA)",
     sum: "Estadísticas descriptivas y robustas, relaciones entre variables y cómo elegir la visualización según el tipo de dato.",
     tags: ["momentos", "IQR / MAD", "Pearson · Spearman · Kendall", "visualización"],
     nbs: [["Ejemplos de correlación", "notebooks/clase_02_correlacion.ipynb"],
           ["EDA del dataset Titanic", "notebooks/clase_02_intro_EDA_Titanic.ipynb"]] },
-  { n: 3, date: "13 may", title: "Test de hipótesis, asociación, faltantes y outliers",
+  { n: 3, notion: "33925f24dbe2804198c8e2eff46cb3c0", date: "13 may", title: "Test de hipótesis, asociación, faltantes y outliers",
     sum: "Test de hipótesis formal, medidas de asociación entre variables de distinto tipo y análisis de datos faltantes y outliers.",
     tags: ["p-valor", "Cramér's V", "χ²", "outliers"],
     nbs: [["Medidas de asociación de variables", "notebooks/clase_03_medidas_asociacion.ipynb"],
           ["Análisis de faltantes y outliers", "notebooks/clase_03_analisis _faltantes_outliers.ipynb"],
           ["Repaso práctico con datos reales (parte 1)", "notebooks/clase_03_repaso_practico_1.ipynb"]] },
-  { n: 4, date: "20 may", title: "Preprocesamiento y limpieza de datos",
+  { n: 4, notion: "33925f24dbe2803394b0e2a3a970672e", date: "20 may", title: "Preprocesamiento y limpieza de datos",
     sum: "Split train/test y stratify, data cleaning vs. data wrangling, estrategias para faltantes y outliers, cardinalidad y técnicas de codificación.",
     tags: ["train_test_split", "imputación", "winsorización", "encoding"],
     nbs: [["Intro a ML parte II: split del dataset", "notebooks/clase_04_split_y_stratify.ipynb"],
           ["Codificación", "notebooks/clase_04_codificacion.ipynb"],
           ["Tratamiento de faltantes", "notebooks/clase_04_tratamiento_datos_faltantes.ipynb"],
           ["Tratamiento de outliers", "notebooks/clase_04_tratamiento_outliers.ipynb"]] },
-  { n: 5, date: "27 may", title: "Procesamiento de datos",
+  { n: 5, notion: "33925f24dbe2805cb952c2277aa89128", date: "27 may", title: "Procesamiento de datos",
     sum: "Normalización y escalamiento, discretización, desbalance y técnicas avanzadas (multivariadas) para faltantes y outliers.",
     tags: ["StandardScaler", "discretización", "SMOTE", "KNN / MICE"],
     nbs: [["Discretización", "notebooks/clase_05_discretizacion.ipynb"],
@@ -596,12 +607,12 @@ const CLASSES = [
           ["Técnicas avanzadas de tratamiento de faltantes", "notebooks/clase_05_tratamiento_datos_faltantes_adv.ipynb"],
           ["Técnicas avanzadas de tratamiento de outliers", "notebooks/clase_05_tratamiento_outliers_adv.ipynb"],
           ["Desbalance", "notebooks/clase_05_desbalance.ipynb"]] },
-  { n: 6, date: "3 jun", title: "Reducción de la dimensionalidad",
+  { n: 6, notion: "34d25f24dbe28096ba7ccee4a96e9a0c", date: "3 jun", title: "Reducción de la dimensionalidad",
     sum: "Maldición de la dimensionalidad, selección de features por asociación y relevancia predictiva, y extracción con PCA.",
     tags: ["Información Mutua", "SelectKBest", "PCA", "varianza explicada"],
     nbs: [["Selección de features", "notebooks/clase_06_seleccion_features.ipynb"],
           ["Extracción de features", "notebooks/clase_06_extraccion_features.ipynb"]] },
-  { n: 7, date: "10 jun", title: "Taller práctico y bonus",
+  { n: 7, notion: "34d25f24dbe280feb871cdef17d534bc", date: "10 jun", title: "Taller práctico y bonus",
     sum: "Preparación completa de un dataset de punta a punta, y EDA sobre datos no tabulares: audio, texto e imágenes.",
     tags: ["pipeline completo", "EDA automático", "audio · texto · imágenes"],
     nbs: [["Taller: regresión", "recursos/taller_regresion_salas_1_a_4.ipynb"],
@@ -611,7 +622,7 @@ const CLASSES = [
           ["EDA texto", "notebooks/clase_07_bonus_EDA_texto.ipynb"],
           ["EDA imágenes", "notebooks/clase_07_bonus_EDA_imagenes.ipynb"],
           ["PCA aplicado a imágenes", "notebooks/clase_07_bonus_PCA_imagenes.ipynb"]] },
-  { n: 8, date: "17 y 20 jun", title: "Presentación del Trabajo Práctico",
+  { n: 8, notion: "42025f24dbe280babbe9f6914dd3549c", date: "17 y 20 jun", title: "Presentación del Trabajo Práctico",
     sum: "Exposición grupal del trabajo final, dividida en dos sesiones. La asistencia de todos los integrantes es obligatoria.",
     tags: ["exposición grupal"],
     nbs: [], link: "#tp" },
@@ -628,7 +639,7 @@ const nbItem = ([t, p]) =>
 
 document.getElementById("class-list").innerHTML = CLASSES.map(c => `
   <article class="clase" id="clase-${c.n}">
-    <div class="meta"><span class="big">${String(c.n).padStart(2, "0")}</span>${esc(c.date)}</div>
+    <div class="meta"><span class="big">${String(c.n).padStart(2, "0")}</span>${esc(c.date)}<br><a class="notion" href="${notion(c.notion)}">Notas</a></div>
     <div>
       <h3>${esc(c.title)}</h3>
       <p class="sum">${esc(c.sum)}</p>
