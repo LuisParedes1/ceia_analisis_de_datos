@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análisis de Datos · CEIA</title>
+<meta name="description" content="Materiales, notas y notebooks de la materia Análisis de Datos — Carrera de Especialización en Inteligencia Artificial (FIUBA).">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231f3a5f'/><circle cx='9' cy='21' r='2.5' fill='%23f4b942'/><circle cx='15' cy='15' r='2.5' fill='%23fff'/><circle cx='22' cy='10' r='2.5' fill='%23fff'/><circle cx='20' cy='19' r='2' fill='%23fff' opacity='.6'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --surface-2: #efece4;
+    --ink: #1b1f24;
+    --ink-2: #4a525c;
+    --ink-3: #7a828c;
+    --line: #dcd7cc;
+    --accent: #1f3a5f;
+    --accent-2: #c2410c;
+    --highlight: #f4b942;
+    --pt: #1f3a5f;
+    --radius: 10px;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --serif: "Fraunces", Georgia, serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12161b;
+      --surface: #1a2027;
+      --surface-2: #222a33;
+      --ink: #e8e6e1;
+      --ink-2: #b3b8bf;
+      --ink-3: #868d96;
+      --line: #2e3742;
+      --accent: #8fb4e3;
+      --accent-2: #f08a4b;
+      --highlight: #f4b942;
+      --pt: #8fb4e3;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:hover { color: var(--accent-2); }
+  .hero-grid > *, .pipeline > *, .clase > *, .cards > *, .tp > *, .res-grid > * { min-width: 0; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 32px; } }
+
+  /* nav */
+  nav.top {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.top .wrap { display: flex; align-items: center; gap: 24px; height: 56px; }
+  nav.top .brand { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--ink); text-decoration: none; white-space: nowrap; }
+  nav.top ul { display: flex; gap: 20px; list-style: none; margin: 0 0 0 auto; padding: 0; overflow-x: auto; scrollbar-width: none; }
+  nav.top ul::-webkit-scrollbar { display: none; }
+  nav.top ul a { font-size: 14px; color: var(--ink-2); text-decoration: none; white-space: nowrap; }
+  nav.top ul a:hover { color: var(--ink); }
+
+  /* hero */
+  header.hero { padding: 56px 0 40px; border-bottom: 1px solid var(--line); }
+  .hero-grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 880px) { .hero-grid { grid-template-columns: 1.15fr 1fr; } }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); margin: 0 0 12px; }
+  h1 { font-family: var(--serif); font-weight: 700; font-size: clamp(40px, 7vw, 68px); line-height: 1.02; letter-spacing: -.02em; margin: 0 0 20px; }
+  .lede { font-size: 18px; color: var(--ink-2); max-width: 34em; margin: 0 0 24px; }
+  .goals { list-style: none; counter-reset: g; padding: 0; margin: 0 0 28px; display: grid; gap: 10px; }
+  .goals li { counter-increment: g; display: grid; grid-template-columns: 28px 1fr; gap: 8px; color: var(--ink-2); font-size: 15px; }
+  .goals li::before { content: "0" counter(g); font-family: var(--mono); font-size: 12px; color: var(--accent); padding-top: 3px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 500;
+    text-decoration: none; border: 1px solid var(--line); color: var(--ink); background: var(--surface);
+  }
+  .btn:hover { border-color: var(--ink-3); color: var(--ink); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .btn.primary:hover { filter: brightness(1.1); color: var(--bg); }
+  .btn svg { width: 16px; height: 16px; flex: none; }
+
+  .plot { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; }
+  .plot svg { display: block; width: 100%; height: auto; }
+  .plot figcaption { font-family: var(--mono); font-size: 11px; color: var(--ink-3); padding: 8px 4px 0; }
+
+  /* sections */
+  section { padding: 64px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: 0; }
+  .sec-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; margin-bottom: 28px; }
+  .sec-head .num { font-family: var(--mono); font-size: 13px; color: var(--accent-2); }
+  h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(28px, 4vw, 38px); letter-spacing: -.01em; line-height: 1.15; margin: 0; }
+  .sec-head p { flex-basis: 100%; margin: 4px 0 0; color: var(--ink-2); max-width: 44em; }
+  h3 { font-size: 17px; font-weight: 600; margin: 0 0 8px; line-height: 1.3; }
+
+  /* pipeline */
+  .pipeline { display: grid; gap: 12px; counter-reset: s; }
+  @media (min-width: 820px) { .pipeline { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; } }
+  .step { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 16px; }
+  .step .n { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+  .step h3 { margin: 6px 0 6px; font-size: 15px; }
+  .step p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+  .step.loop { background: var(--surface-2); border-style: dashed; }
+  .loop-note { margin-top: 14px; font-size: 13px; color: var(--ink-3); font-family: var(--mono); }
+  .loop-note b { color: var(--accent-2); font-weight: 500; }
+
+  /* classes */
+  .classes { display: grid; gap: 14px; }
+  .clase {
+    display: grid; gap: 16px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px;
+  }
+  @media (min-width: 820px) { .clase { grid-template-columns: 140px 1fr 1fr; gap: 24px; } }
+  .clase .meta { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+  .clase .meta .big { display: block; font-family: var(--serif); font-size: 36px; line-height: 1; color: var(--accent); margin-bottom: 6px; }
+  .clase p.sum { margin: 0 0 10px; font-size: 14.5px; color: var(--ink-2); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .tags li { font-size: 12px; padding: 3px 8px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); }
+  .nbs { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .nbs li { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .nbs li:last-child { border-bottom: 0; }
+  .nbs .t { flex: 1; min-width: 0; }
+  .nbs a.k { font-family: var(--mono); font-size: 11px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px; text-decoration: none; color: var(--ink-2); white-space: nowrap; }
+  .nbs a.k:hover { border-color: var(--accent); color: var(--accent); }
+  .nbs .empty { color: var(--ink-3); font-size: 13px; font-style: italic; border: 0; }
+  .label { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); margin: 0 0 6px; }
+
+  /* cheat sheet */
+  .cards { display: grid; gap: 14px; }
+  @media (min-width: 720px) { .cards { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .cards { grid-template-columns: 1fr 1fr 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  .card.wide { grid-column: 1 / -1; }
+  .card p, .card li { font-size: 14px; color: var(--ink-2); }
+  .card p { margin: 0 0 8px; }
+  .card ul { margin: 0; padding-left: 18px; }
+  .card li { margin: 3px 0; }
+  .card b { color: var(--ink); font-weight: 600; }
+  .card code, .tp code { font-family: var(--mono); font-size: .88em; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+  .callout { margin-top: 10px; padding: 10px 12px; border-left: 3px solid var(--highlight); background: var(--surface-2); border-radius: 0 6px 6px 0; font-size: 13.5px; color: var(--ink-2); }
+  .bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin: 12px 0 6px; }
+  .bar span:nth-child(1) { flex: 10; background: #3f8f5a; }
+  .bar span:nth-child(2) { flex: 20; background: var(--highlight); }
+  .bar span:nth-child(3) { flex: 40; background: var(--surface-2); }
+  .bar span:nth-child(4) { flex: 30; background: var(--accent-2); }
+  .bar-legend { display: grid; grid-template-columns: repeat(3, 1fr); font-size: 12px; color: var(--ink-3); font-family: var(--mono); }
+  .bar-legend span:nth-child(2) { text-align: center; }
+  .bar-legend span:nth-child(3) { text-align: right; }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; color: var(--ink); background: var(--surface-2); white-space: nowrap; }
+  td { color: var(--ink-2); }
+  td:first-child { font-weight: 500; color: var(--ink); white-space: nowrap; }
+
+  /* TP */
+  .tp { display: grid; gap: 24px; }
+  @media (min-width: 880px) { .tp { grid-template-columns: 1.1fr 1fr; } }
+  .formula {
+    font-family: var(--serif); font-size: clamp(17px, 2.6vw, 22px); text-align: center;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 12px; margin: 16px 0; overflow-x: auto; white-space: nowrap;
+  }
+  .formula .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 4px; font-size: .85em; }
+  .formula .frac > span:first-child { border-bottom: 1.5px solid currentColor; padding: 0 4px 2px; }
+  .formula .frac > span:last-child { padding: 2px 4px 0; }
+  .vars { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14px; color: var(--ink-2); margin: 0; }
+  .vars dt { font-family: var(--serif); font-style: italic; color: var(--ink); }
+  .vars dd { margin: 0; }
+  ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: 10px; }
+  ol.steps li { counter-increment: st; display: grid; grid-template-columns: 32px 1fr; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font-size: 14px; color: var(--ink-2); }
+  ol.steps li::before { content: counter(st); font-family: var(--mono); font-weight: 500; color: var(--accent-2); }
+  ol.steps b { color: var(--ink); }
+  .team { margin-top: 16px; font-size: 14px; color: var(--ink-2); }
+
+  /* resources */
+  .res-grid { display: grid; gap: 14px; }
+  @media (min-width: 720px) { .res-grid { grid-template-columns: 1fr 1fr; } }
+  .list-plain { list-style: none; margin: 0; padding: 0; }
+  .list-plain li { padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: 14px; color: var(--ink-2); }
+  .list-plain li:last-child { border-bottom: 0; }
+  .list-plain .sub { display: block; font-size: 12.5px; color: var(--ink-3); }
+  pre {
+    margin: 8px 0 0; padding: 12px 14px; background: var(--surface-2); border-radius: 8px;
+    font: 12.5px/1.6 var(--mono); color: var(--ink); overflow-x: auto;
+  }
+  .tabs { display: flex; gap: 4px; margin-bottom: 4px; }
+  .tabs button {
+    font: 500 12px var(--mono); padding: 5px 10px; border-radius: 6px; cursor: pointer;
+    background: transparent; border: 1px solid var(--line); color: var(--ink-2);
+  }
+  .tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .tabpanel[hidden] { display: none; }
+
+  footer { padding: 40px 0 56px; font-size: 13px; color: var(--ink-3); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 16px 40px; justify-content: space-between; }
+  footer a { color: var(--ink-2); }
+</style>
+</head>
+<body>
+
+<nav class="top" aria-label="Secciones">
+  <div class="wrap">
+    <a class="brand" href="#">AdD · CEIA</a>
+    <ul>
+      <li><a href="#flujo">Flujo</a></li>
+      <li><a href="#clases">Clases</a></li>
+      <li><a href="#conceptos">Conceptos</a></li>
+      <li><a href="#tp">Trabajo Práctico</a></li>
+      <li><a href="#recursos">Recursos</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">CEIA · FIUBA · 2026</p>
+      <h1>Análisis de&nbsp;Datos</h1>
+      <p class="lede">Explorar, limpiar y preparar datos para entrenar modelos de Machine Learning. Notas de cursada, notebooks de cada clase y el trabajo práctico final, en un solo lugar.</p>
+      <ol class="goals">
+        <li>Realizar un análisis exploratorio de datos en detalle.</li>
+        <li>Entender qué mecanismos existen para el tratamiento de datos y cuáles conviene usar antes de entrenar un modelo.</li>
+        <li>Aplicar de forma práctica conceptos de matemática y probabilidad vistos en otras materias.</li>
+      </ol>
+      <div class="cta">
+        <a class="btn primary" href="#clases">Ver las clases</a>
+        <a class="btn" href="https://github.com/LuisParedes1/CEIA_Analisis_de_datos">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          Repositorio
+        </a>
+        <a class="btn" href="https://campusposgrado.fi.uba.ar/course/view.php?id=240">Campus FIUBA</a>
+      </div>
+    </div>
+    <figure class="plot" style="margin:0">
+      <svg id="pca" viewBox="0 0 420 320" role="img" aria-label="Nube de puntos correlacionados con sus dos componentes principales dibujadas como flechas"></svg>
+      <figcaption>PCA sobre una nube 2D — PC1 captura la dirección de máxima varianza.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main>
+
+<section id="flujo">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">01</span>
+      <h2>Flujo de trabajo del análisis de datos para IA</h2>
+      <p>El análisis de datos es una disciplina en sí misma; en esta materia lo vemos en el contexto de problemas de Machine Learning.</p>
+    </div>
+    <div class="pipeline">
+      <div class="step">
+        <span class="n">01</span>
+        <h3>Identificar el problema</h3>
+        <p>¿Supervisado o no supervisado? ¿Variables cuantitativas (discretas / continuas) o categóricas (nominales / ordinales)?</p>
+      </div>
+      <div class="step loop">
+        <span class="n">02</span>
+        <h3>Recopilar los datos</h3>
+        <p>Pipelines ETL/ELT, archivos, bases de datos, APIs, scraping, Kaggle: cualquier fuente de <i>data ingestion</i>.</p>
+      </div>
+      <div class="step loop">
+        <span class="n">03</span>
+        <h3>EDA y limpieza básica</h3>
+        <p>Resumir, visualizar y entender los datos. Detectar faltantes, duplicados, outliers y tipos incorrectos.</p>
+      </div>
+      <div class="step loop">
+        <span class="n">04</span>
+        <h3>Análisis estadístico y preparación</h3>
+        <p>Split train/test, imputación, codificación, escalado, balanceo y reducción de dimensionalidad.</p>
+      </div>
+      <div class="step loop">
+        <span class="n">05</span>
+        <h3>Entrenar modelos</h3>
+        <p>El dataset preparado alimenta el modelo. Sus resultados suelen llevar de vuelta al paso 2.</p>
+      </div>
+    </div>
+    <p class="loop-note"><b>↻ pasos 2–5:</b> proceso iterativo</p>
+  </div>
+</section>
+
+<section id="clases">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">02</span>
+      <h2>Clases</h2>
+      <p>Un resumen de cada encuentro con sus notebooks. <b>GitHub</b> abre la notebook renderizada y <b>Colab</b> la abre lista para ejecutar.</p>
+    </div>
+    <div class="classes" id="class-list"></div>
+  </div>
+</section>
+
+<section id="conceptos">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">03</span>
+      <h2>Conceptos clave</h2>
+      <p>Las reglas y tablas que más se repiten a lo largo de la cursada, para tener a mano.</p>
+    </div>
+    <div class="cards">
+
+      <div class="card">
+        <h3>Tipos de variables</h3>
+        <ul>
+          <li><b>Cuantitativas</b>: se cuentan o miden.
+            <ul><li>Discretas: valores puntuales</li><li>Continuas: cualquier valor en un rango</li></ul>
+          </li>
+          <li><b>Categóricas</b>: cualidades.
+            <ul><li>Nominales: sin orden (colores, países)</li><li>Ordinales: con jerarquía (bajo &lt; medio &lt; alto)</li></ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Describir una variable numérica</h3>
+        <p>Por <b>tendencia central</b>, <b>dispersión</b> y <b>forma</b>. Los momentos de orden k:</p>
+        <ul>
+          <li>k=1 → media</li>
+          <li>k=2 → varianza</li>
+          <li>k=3 → asimetría</li>
+          <li>k=4 → curtosis</li>
+        </ul>
+        <div class="callout"><b>Estadística robusta</b>: mediana, IQR y MAD resisten outliers y datos no normales.</div>
+      </div>
+
+      <div class="card">
+        <h3>Test de hipótesis</h3>
+        <ul>
+          <li>Plantear H<sub>0</sub> (lo que busco rechazar) y H<sub>1</sub>.</li>
+          <li>Calcular el estadístico de prueba.</li>
+          <li>Calcular el p-valor.</li>
+          <li>Decidir según el nivel de significancia α.</li>
+        </ul>
+        <div class="callout">Nunca se demuestra H<sub>0</sub>. A lo sumo, “no hay evidencia suficiente para rechazarla”.</div>
+      </div>
+
+      <div class="card">
+        <h3>¿Qué hago con los faltantes?</h3>
+        <p>Regla práctica según el % de nulos de la columna:</p>
+        <div class="bar" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <div class="bar-legend"><span>&lt;10%: borrar filas</span><span>10–30%: imputar</span><span>&gt;70%: borrar columna</span></div>
+        <div class="callout">Imputar es “inventar con criterio”: puede sesgar la distribución. A veces el nulo <i>tiene significado</i> y conviene crear una categoría o columna indicadora.</div>
+      </div>
+
+      <div class="card">
+        <h3>Outliers</h3>
+        <ul>
+          <li><b>Eliminar</b> si son errores o no representativos.</li>
+          <li><b>Imputar</b>: media/mediana o winsorización (capping por percentil).</li>
+          <li><b>Transformar</b>: log o raíz cuadrada.</li>
+          <li><b>Segmentar</b> en una categoría aparte.</li>
+        </ul>
+        <div class="callout">Primero analizar si son errores o valores legítimos.</div>
+      </div>
+
+      <div class="card">
+        <h3>Desbalance</h3>
+        <p>Las clases del target no están representadas en forma proporcional, y el modelo aprende mejor la mayoritaria.</p>
+        <ul>
+          <li><b>Entropía de Shannon</b>: cuanto más alta, más balanceado.</li>
+          <li><b>Índice de Gini</b>: ≈0.5 (binario) indica balance.</li>
+        </ul>
+        <div class="callout"><code>stratify</code> conserva la proporción en el split pero <b>no</b> resuelve el desbalance.</div>
+      </div>
+
+      <div class="card wide">
+        <h3>Codificación de variables categóricas</h3>
+        <p>La elección depende del tipo de variable y de su <b>cardinalidad</b> (cantidad de valores únicos).</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Técnica</th><th>Cuándo usarla</th><th>Cuidado con</th></tr></thead>
+            <tbody>
+              <tr><td>One-hot</td><td>Nominales de baja cardinalidad</td><td>Explota en columnas si hay muchas categorías</td></tr>
+              <tr><td>Ordinal</td><td>Ordinales, para preservar el orden</td><td>Introduce una magnitud ficticia (2 ≠ “el doble”)</td></tr>
+              <tr><td>Hashing</td><td>Cardinalidad muy alta con pipelines simples</td><td>Colisiones</td></tr>
+              <tr><td>Frequency</td><td>Cuando importa cuán frecuente es una categoría</td><td>Categorías con igual frecuencia colisionan</td></tr>
+              <tr><td>Target</td><td>Alta cardinalidad con relación fuerte al target</td><td>Fuga de información → usar k-fold o leave-one-out</td></tr>
+              <tr><td>Cíclica (sin/cos)</td><td>Meses, días, horas</td><td>Genera dos columnas por variable</td></tr>
+              <tr><td>Label</td><td>Sólo para el <b>target</b></td><td>Nunca usarla en features</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card wide">
+        <h3>Medidas de asociación según tipo de variable</h3>
+        <p>Sirven para detectar features redundantes (feature–feature) y relaciones débiles o demasiado fuertes con el target.</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th></th><th>Numérica</th><th>Nominal (3+)</th><th>Binaria</th><th>Ordinal</th></tr></thead>
+            <tbody>
+              <tr><td>Numérica</td><td>Pearson / Spearman / Kendall</td><td>Eta²</td><td>Punto-biserial</td><td>Kendall Tau</td></tr>
+              <tr><td>Nominal (3+)</td><td>—</td><td>Cramér's V</td><td>Cramér's V</td><td>Kendall Tau o Cramér's V</td></tr>
+              <tr><td>Binaria</td><td>—</td><td>—</td><td>Coeficiente Phi</td><td>Kendall Tau</td></tr>
+              <tr><td>Ordinal</td><td>—</td><td>—</td><td>—</td><td>Kendall Tau</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Reducción de dimensionalidad</h3>
+        <p>La <b>maldición de la dimensionalidad</b>: con muchas features el espacio se vuelve disperso, las distancias pierden sentido y aumenta el overfitting.</p>
+        <ul>
+          <li><b>Selección</b>: elegir un subconjunto (ANOVA, χ², Información Mutua, <code>SelectKBest</code>).</li>
+          <li><b>Extracción</b>: crear features nuevas (PCA, LDA, t-SNE, UMAP).</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>PCA en 3 pasos</h3>
+        <ul>
+          <li>Estandarizar → matriz de covarianza → autovectores (ejes) y autovalores (varianza).</li>
+          <li>Proyectar: <code>Y = X′·V</code> (scores).</li>
+          <li>Quedarse con los k primeros: ≈70–80% de varianza acumulada o el <b>codo</b>.</li>
+        </ul>
+        <div class="callout">Asume relaciones lineales, pierde información y dificulta interpretar las features.</div>
+      </div>
+
+      <div class="card">
+        <h3>La regla de oro</h3>
+        <p>Hacer el <b>split primero</b>. Toda transformación se <b>calcula sobre TRAIN</b> y sólo se <b>aplica sobre TEST</b>.</p>
+        <div class="callout">El balanceo <b>no</b> se aplica a TEST. En series temporales, ordenar por fecha y usar <code>shuffle=False</code>.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="tp">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">04</span>
+      <h2>Trabajo Práctico: ¿será exitosa esta película?</h2>
+      <p>Elegir un dataset, plantear un problema de ML supervisado, hacer el EDA completo y preparar los datos para el entrenamiento (sin entrenar el modelo).</p>
+    </div>
+    <div class="tp">
+      <div>
+        <p>Trabajamos con el <a href="https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies">Full TMDB Movies Dataset 2024</a>: <b>1.4 millones de películas</b> con 24 columnas de metadatos. Lo planteamos como un problema de <b>clasificación binaria</b>: predecir si una película nueva será exitosa ante la audiencia.</p>
+        <p>El éxito se define con un <i>weighted rating</i> bayesiano, que corrige el promedio de las películas con pocos votos acercándolo a la media global:</p>
+        <div class="formula" aria-label="WR igual a v sobre v más u por R, más u sobre v más u por C">
+          WR = <span class="frac"><span><i>v</i></span><span><i>v</i> + <i>u</i></span></span> · <i>R</i> + <span class="frac"><span><i>u</i></span><span><i>v</i> + <i>u</i></span></span> · <i>C</i>
+        </div>
+        <dl class="vars">
+          <dt>R</dt><dd><code>vote_average</code> de la película</dd>
+          <dt>v</dt><dd><code>vote_count</code></dd>
+          <dt>C</dt><dd>media global de <code>vote_average</code> (el prior)</dd>
+          <dt>u</dt><dd>umbral mínimo de votos confiable (cuantil 0.90)</dd>
+        </dl>
+        <p style="margin-top:14px">Las películas por encima del cuantil Q3 de <code>WR</code> reciben el label <code>success</code>.</p>
+        <div class="cta" style="margin-top:20px">
+          <a class="btn primary" href="https://colab.research.google.com/github/LuisParedes1/CEIA_Analisis_de_datos/blob/main/TP/Trabajo_Practico_Analisis_de_Datos_CEIA.ipynb">Abrir notebook en Colab</a>
+          <a class="btn" href="https://github.com/LuisParedes1/CEIA_Analisis_de_datos/blob/main/TP/Trabajo_Practico_Analisis_de_Datos_CEIA.ipynb">Ver en GitHub</a>
+          <a class="btn" href="TP/Analisis_de_datos_-_Trabajo_grupal_-_2B2026.pdf">Enunciado (PDF)</a>
+        </div>
+      </div>
+      <div>
+        <p class="label">Pipeline del notebook</p>
+        <ol class="steps">
+          <li><span><b>EDA</b>: nulos, distribuciones, correlaciones y visualizaciones clave.</span></li>
+          <li><span><b>Limpieza y filtrado</b>: de 1.4M a ~293k películas con votos válidos, fecha de estreno y género.</span></li>
+          <li><span><b>Encoding</b>: one-hot de géneros y extracción de año y mes de estreno.</span></li>
+          <li><span><b>Selección de features</b>: ANOVA F-test, χ² e Información Mutua.</span></li>
+          <li><span><b>Reducción de dimensionalidad</b>: PCA a 2 componentes con biplot.</span></li>
+        </ol>
+        <p class="team"><span class="label">Equipo</span><br>Yoharlyn Alvarez · Sebastián Aragones · Luis Paredes</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="recursos">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">05</span>
+      <h2>Actividades y recursos</h2>
+    </div>
+    <div class="res-grid">
+
+      <div class="card">
+        <h3>Actividades</h3>
+        <ul class="nbs" id="activities"></ul>
+      </div>
+
+      <div class="card">
+        <h3>Bibliografía recomendada</h3>
+        <ul class="list-plain">
+          <li><a href="https://wesmckinney.com/book/">Python for Data Analysis</a><span class="sub">Wes McKinney: pandas, NumPy e IPython</span></li>
+          <li>Practical Statistics for Data Scientists<span class="sub">Peter Bruce, Andrew Bruce y Peter Gedeck</span></li>
+          <li><a href="https://www.statlearning.com/">An Introduction to Statistical Learning (Python)</a><span class="sub">James, Witten, Hastie y Tibshirani</span></li>
+          <li><a href="https://mml-book.github.io/book/mml-book.pdf">Mathematics for Machine Learning</a><span class="sub">Deisenroth, Faisal y Ong</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Datasets usados en clase</h3>
+        <ul class="list-plain">
+          <li>Titanic<span class="sub">EDA introductorio, faltantes y codificación</span></li>
+          <li>Servicio Meteorológico Nacional (SMN)<span class="sub">Estadísticas climáticas y series temporales</span></li>
+          <li>Captura por puerto y flota 2010–2018, turismo, calidad de vida<span class="sub">Repasos prácticos con datos reales</span></li>
+          <li>Student performance, movies (SQLite), Landsat<span class="sub">Lectura desde múltiples fuentes, imágenes</span></li>
+        </ul>
+        <p style="margin:10px 0 0;font-size:13px"><a href="https://github.com/LuisParedes1/CEIA_Analisis_de_datos/tree/main/datasets">Ver carpeta datasets →</a></p>
+      </div>
+
+      <div class="card">
+        <h3>Configurar el entorno</h3>
+        <div class="tabs" role="tablist">
+          <button role="tab" aria-selected="true" data-tab="uv">uv</button>
+          <button role="tab" aria-selected="false" data-tab="conda">conda</button>
+          <button role="tab" aria-selected="false" data-tab="colab">Colab</button>
+        </div>
+        <div class="tabpanel" data-panel="uv"><pre>git clone https://github.com/LuisParedes1/CEIA_Analisis_de_datos.git
+cd CEIA_Analisis_de_datos
+uv venv --python 3.11
+source .venv/bin/activate
+uv pip install -e .
+jupyter notebook</pre></div>
+        <div class="tabpanel" data-panel="conda" hidden><pre>git clone https://github.com/LuisParedes1/CEIA_Analisis_de_datos.git
+cd CEIA_Analisis_de_datos
+conda env create -f environment.yml
+conda activate add-env
+jupyter notebook</pre></div>
+        <div class="tabpanel" data-panel="colab" hidden><pre># Sin instalar nada: usá los botones "Colab"
+# de cada notebook, o en Colab:
+File → Open notebook → GitHub →
+LuisParedes1/CEIA_Analisis_de_datos</pre></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <b style="color:var(--ink-2)">Docentes</b><br>
+      Esp. Lic. María Carina Roldán · <a href="mailto:macroldan@fi.uba.ar">macroldan@fi.uba.ar</a><br>
+      Esp. Ing. Ariadna Garmendia · <a href="mailto:arigarmendia@gmail.com">arigarmendia@gmail.com</a>
+    </div>
+    <div>
+      Carrera de Especialización en Inteligencia Artificial · FIUBA<br>
+      Fork del <a href="https://github.com/FIUBA-Posgrado-Inteligencia-Artificial/CEIA_Analisis_de_datos">repositorio oficial de la materia</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const REPO = "LuisParedes1/CEIA_Analisis_de_datos";
+const BRANCH = "main";
+const gh = p => `https://github.com/${REPO}/blob/${BRANCH}/${encodeURI(p)}`;
+const colab = p => `https://colab.research.google.com/github/${REPO}/blob/${BRANCH}/${encodeURI(p)}`;
+
+const CLASSES = [
+  { n: 1, date: "29 abr", title: "Introducción al Análisis de Datos",
+    sum: "Qué es el análisis de datos, roles en equipos de datos, aprendizaje supervisado y no supervisado, y bibliotecas de Python para cada etapa del flujo.",
+    tags: ["pandas", "lectura de fuentes", "tipos de variables", "intro EDA"],
+    nbs: [["Introducción a pandas: importar datos de distintas fuentes", "notebooks/clase_01_introduccion.ipynb"],
+          ["Ejercicio opcional", "recursos/clase_01_ejercicio.ipynb"]] },
+  { n: 2, date: "6 may", title: "Análisis exploratorio de datos (EDA)",
+    sum: "Estadísticas descriptivas y robustas, relaciones entre variables y cómo elegir la visualización según el tipo de dato.",
+    tags: ["momentos", "IQR / MAD", "Pearson · Spearman · Kendall", "visualización"],
+    nbs: [["Ejemplos de correlación", "notebooks/clase_02_correlacion.ipynb"],
+          ["EDA del dataset Titanic", "notebooks/clase_02_intro_EDA_Titanic.ipynb"]] },
+  { n: 3, date: "13 may", title: "Test de hipótesis, asociación, faltantes y outliers",
+    sum: "Test de hipótesis formal, medidas de asociación entre variables de distinto tipo y análisis de datos faltantes y outliers.",
+    tags: ["p-valor", "Cramér's V", "χ²", "outliers"],
+    nbs: [["Medidas de asociación de variables", "notebooks/clase_03_medidas_asociacion.ipynb"],
+          ["Análisis de faltantes y outliers", "notebooks/clase_03_analisis _faltantes_outliers.ipynb"],
+          ["Repaso práctico con datos reales (parte 1)", "notebooks/clase_03_repaso_practico_1.ipynb"]] },
+  { n: 4, date: "20 may", title: "Preprocesamiento y limpieza de datos",
+    sum: "Split train/test y stratify, data cleaning vs. data wrangling, estrategias para faltantes y outliers, cardinalidad y técnicas de codificación.",
+    tags: ["train_test_split", "imputación", "winsorización", "encoding"],
+    nbs: [["Intro a ML parte II: split del dataset", "notebooks/clase_04_split_y_stratify.ipynb"],
+          ["Codificación", "notebooks/clase_04_codificacion.ipynb"],
+          ["Tratamiento de faltantes", "notebooks/clase_04_tratamiento_datos_faltantes.ipynb"],
+          ["Tratamiento de outliers", "notebooks/clase_04_tratamiento_outliers.ipynb"]] },
+  { n: 5, date: "27 may", title: "Procesamiento de datos",
+    sum: "Normalización y escalamiento, discretización, desbalance y técnicas avanzadas (multivariadas) para faltantes y outliers.",
+    tags: ["StandardScaler", "discretización", "SMOTE", "KNN / MICE"],
+    nbs: [["Discretización", "notebooks/clase_05_discretizacion.ipynb"],
+          ["Normalización y estandarización", "notebooks/clase_05_normalizacion_estandarizacion.ipynb"],
+          ["Técnicas avanzadas de tratamiento de faltantes", "notebooks/clase_05_tratamiento_datos_faltantes_adv.ipynb"],
+          ["Técnicas avanzadas de tratamiento de outliers", "notebooks/clase_05_tratamiento_outliers_adv.ipynb"],
+          ["Desbalance", "notebooks/clase_05_desbalance.ipynb"]] },
+  { n: 6, date: "3 jun", title: "Reducción de la dimensionalidad",
+    sum: "Maldición de la dimensionalidad, selección de features por asociación y relevancia predictiva, y extracción con PCA.",
+    tags: ["Información Mutua", "SelectKBest", "PCA", "varianza explicada"],
+    nbs: [["Selección de features", "notebooks/clase_06_seleccion_features.ipynb"],
+          ["Extracción de features", "notebooks/clase_06_extraccion_features.ipynb"]] },
+  { n: 7, date: "10 jun", title: "Taller práctico y bonus",
+    sum: "Preparación completa de un dataset de punta a punta, y EDA sobre datos no tabulares: audio, texto e imágenes.",
+    tags: ["pipeline completo", "EDA automático", "audio · texto · imágenes"],
+    nbs: [["Taller: regresión", "recursos/taller_regresion_salas_1_a_4.ipynb"],
+          ["Taller: clasificación", "recursos/taller_clasificacion_salas_5_a_8.ipynb"],
+          ["EDA automático", "notebooks/clase_07_bonus_EDA_automatico.ipynb"],
+          ["EDA audio", "notebooks/clase_07_bonus_EDA_audio.ipynb"],
+          ["EDA texto", "notebooks/clase_07_bonus_EDA_texto.ipynb"],
+          ["EDA imágenes", "notebooks/clase_07_bonus_EDA_imagenes.ipynb"],
+          ["PCA aplicado a imágenes", "notebooks/clase_07_bonus_PCA_imagenes.ipynb"]] },
+  { n: 8, date: "17 y 20 jun", title: "Presentación del Trabajo Práctico",
+    sum: "Exposición grupal del trabajo final, dividida en dos sesiones. La asistencia de todos los integrantes es obligatoria.",
+    tags: ["exposición grupal"],
+    nbs: [], link: "#tp" },
+];
+
+const ACTIVITIES = [
+  ["Actividad 2: EDA básico de un dataset", "actividades/Actividad_2.ipynb"],
+  ["Actividad 3: Estadísticas climáticas (región Pampeana, SMN)", "actividades/Actividad_3.ipynb"],
+];
+
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const nbItem = ([t, p]) =>
+  `<li><span class="t">${esc(t)}</span><a class="k" href="${gh(p)}">GitHub</a><a class="k" href="${colab(p)}">Colab</a></li>`;
+
+document.getElementById("class-list").innerHTML = CLASSES.map(c => `
+  <article class="clase" id="clase-${c.n}">
+    <div class="meta"><span class="big">${String(c.n).padStart(2, "0")}</span>${esc(c.date)}</div>
+    <div>
+      <h3>${esc(c.title)}</h3>
+      <p class="sum">${esc(c.sum)}</p>
+      <ul class="tags">${c.tags.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
+    </div>
+    <div>
+      <p class="label">Notebooks</p>
+      <ul class="nbs">${c.nbs.length ? c.nbs.map(nbItem).join("")
+        : `<li class="empty">Sin notebooks. <a href="${c.link}">Ver el TP ↓</a></li>`}</ul>
+    </div>
+  </article>`).join("");
+
+document.getElementById("activities").innerHTML = ACTIVITIES.map(nbItem).join("");
+
+// tabs
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => {
+  const card = b.closest(".card");
+  card.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
+  card.querySelectorAll(".tabpanel").forEach(p => p.hidden = p.dataset.panel !== b.dataset.tab);
+}));
+
+// PCA hero plot: correlated gaussian cloud + principal axes (seeded so it is stable)
+(function () {
+  const svg = document.getElementById("pca");
+  const NS = "http://www.w3.org/2000/svg";
+  let s = 7;
+  const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  const gauss = () => Math.sqrt(-2 * Math.log(rnd())) * Math.cos(2 * Math.PI * rnd());
+  const cx = 210, cy = 160, ang = -0.55, a = 92, b = 30;
+  const el = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; };
+
+  // light grid
+  for (let x = 30; x <= 390; x += 45) el("line", { x1: x, y1: 20, x2: x, y2: 300, stroke: "var(--line)", "stroke-width": 1 });
+  for (let y = 25; y <= 295; y += 45) el("line", { x1: 30, y1: y, x2: 390, y2: y, stroke: "var(--line)", "stroke-width": 1 });
+
+  const c = Math.cos(ang), sn = Math.sin(ang);
+  for (let i = 0; i < 140; i++) {
+    const u = gauss() * a * 0.55, v = gauss() * b * 0.55;
+    const x = cx + u * c - v * sn, y = cy + u * sn + v * c;
+    if (x < 34 || x > 386 || y < 24 || y > 296) continue;
+    el("circle", { cx: x.toFixed(1), cy: y.toFixed(1), r: 3.2, fill: "var(--pt)", "fill-opacity": 0.28 + rnd() * 0.3 });
+  }
+  const defs = document.createElementNS(NS, "defs");
+  defs.innerHTML = `<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--accent-2)"/></marker>
+                    <marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--highlight)"/></marker>`;
+  svg.appendChild(defs);
+  const L1 = 150, L2 = 52;
+  el("line", { x1: cx, y1: cy, x2: cx + L1 * c, y2: cy + L1 * sn, stroke: "var(--accent-2)", "stroke-width": 3, "marker-end": "url(#ah)" });
+  el("line", { x1: cx, y1: cy, x2: cx - L2 * sn, y2: cy + L2 * c, stroke: "var(--highlight)", "stroke-width": 3, "marker-end": "url(#ah2)" });
+  el("circle", { cx, cy, r: 4, fill: "var(--ink)" });
+  const t1 = el("text", { x: cx + L1 * c + 6, y: cy + L1 * sn - 6, fill: "var(--accent-2)", "font-family": "IBM Plex Mono, monospace", "font-size": 13, "font-weight": 500 }); t1.textContent = "PC1";
+  const t2 = el("text", { x: cx - L2 * sn - 34, y: cy + L2 * c + 16, fill: "var(--ink-2)", "font-family": "IBM Plex Mono, monospace", "font-size": 13, "font-weight": 500 }); t2.textContent = "PC2";
+})();
+</script>
+</body>
+</html>
